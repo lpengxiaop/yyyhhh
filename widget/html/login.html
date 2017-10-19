@@ -52,7 +52,8 @@
                   console.log(JSON.stringify(ret));
                   if(ret.data.token){
                     $api.setStorage('token',ret.data.token);   //存储token
-                    $api.setStorage('nickname',ret.data.nickname);
+                    $api.setStorage('nickname',ret.data.robot_info.nickname);
+                    
                     api.closeFrame({
                         name: 'login'
                     });
