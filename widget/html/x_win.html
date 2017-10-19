@@ -125,7 +125,7 @@
             var title = data_json[i].title;
             var id = data_json[i].id;
             var title = $api.setStorage('x_title',title);
-            
+
             html +='<div class="menus" title='+data_json[i].title+' id='+data_json[i].id+' tapmode onclick="open_json(this);"><div class="aui-grid-label" >'+data_json[i].title+'</div></div>';
           //打开详情页面
 
@@ -140,7 +140,6 @@
       var id = $api.attr(obj,'id');
 
       var menus_h = $api.offset($api.dom('.menus')).h;
-      alert(title);
 
       api.openWin({
           name: 'x_frm',
