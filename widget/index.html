@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    <style type="text/css">
+    html,body{
+        height: 100%;
+    }
+    #wrap{
+        height: 100%;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-flex-flow: column;
+               flex-flow: column;
+    }
+    #header{
+        text-align: center; background-color: #81a9c3; color: #fff;
+        width: 100%;margin-top: -25px;
+    }
+    #header h1{
+        font-size: 20px; height: 44px; line-height: 44px; margin: 0em; color: #fff;
+    }
+    #main{
+        -webkit-box-flex: 1;
+        -webkit-flex: 1;
+        flex: 1;
+    }
+    #footer{
+        height: 30px; line-height: 30px;
+        background-color: #81a9c3;
+        width: 100%;
+        text-align: center;
+    }
+    #footer h5{
+        color: white;
+    }
+    .con{font-size: 28px; text-align: center;}
+    .flex-con{
+      overflow: auto
+    }
+
+    .sq_input{padding-top: 50px}
+    .sq_input ul li div{font-size: 18px}
+    .sq_input h4{text-align: center;line-height: 60px;font-size: 25px}
+    </style>
+</head>
+<body>
+
+
+  <div class="aui-content aui-margin-b-15 sq_input">
+    <h4>请输入机器授权码后登陆</h4>
+      <ul class="aui-list aui-form-list">
+
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">
+                      请输入授权账户
+                  </div>
+                  <div class="aui-list-item-input">
+                      <input type="text" placeholder="账户" id="name" value="zhenye">
+                  </div>
+              </div>
+          </li>
+
+          <li class="aui-list-item">
+              <div class="aui-list-item-inner">
+                  <div class="aui-list-item-label">
+                      请输入授权密码
+                  </div>
+                  <div class="aui-list-item-input">
+                      <input type="password" placeholder="密码" id="pass" value="123456">
+                  </div>
+              </div>
+          </li>
+
+          <li class="aui-list-item">
+                  <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                      <div class="aui-btn aui-btn-info aui-margin-r-5" tapmode onclick="login();">提交</div>
+                  </div>
+              </li>
+        </ul>
+      </div>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/md5.min.js"></script>
+<script type="text/javascript" src="./script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+
+       //横屏适配
+        api.setScreenOrientation({
+            orientation: 'landscape_left',
+        });
+        //全屏
+        api.setFullScreen({
+            fullScreen: true
+        });
+
+        //
+
+
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+
+
+        //MD5加密获取mac
+        var id = api.deviceId;
+        var md5_str = 'zhenye';
+        var machinecode = md5(id+md5_str);
+
+        $api.setStorage('APP_URL','http://yh.zhiranw.com');
+        $api.setStorage('Machinecode',machinecode);
+
+
+        var token = $api.getStorage('token');
+        if(token){
+
+          api.openWin({
+              name: 'main',
+              url: './html/main.html',
+              pageParam: {
+                  name: 'main'
+              }
+          });
+        }
+    };
+
+    function login(){
+      var app_url = $api.getStorage('APP_URL');
+      //请求网站
+      api.ajax({
+        url: app_url+'/robot/login/login.html',
+        method: 'post',
+        headers:{
+          "Content-Type":'application/json'
+        },
+        data:{
+            body: {
+              "name": $('#name').val(),
+              "password": $('#pass').val(),
+              "machinecode": $api.getStorage('Machinecode'),
+            }
+        }
+
+        }, function(ret, err) {
+            if (ret) {
+
+                console.log(JSON.stringify(ret));
+                if(ret.data.token){
+                  $api.setStorage('token',ret.data.token);   //存储token
+                  $api.setStorage('name',$('#name').val());
+                  $api.setStorage('password',$('#pass').val());
+                  $api.setStorage('nickname',ret.data.nickname);
+
+
+                    api.openWin({
+                        name: 'main',
+                        url: './html/main.html',
+                        pageParam: {
+                            name: 'main'
+                        }
+                    });
+                }else{
+                  alert('不匹配');
+                }
+            } else {
+                api.alert({ msg: JSON.stringify(err) });
+            }
+        });
+    }
+
+
+</script>
+</html>

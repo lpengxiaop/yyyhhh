@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body{}
+  #wrap{position: fixed;top:0;right: 0;width:100%;height: 100%;background: url('../image/bg.png') no-repeat;background-size: cover;}
+  #header{height: 70px;background: rgba(19,91,172,0.8);opacity: 1;text-align: center;color: #fff;}
+  #header h1{font-size: 26px}
+
+  .aui-grid{width: 90%;margin: 0 auto;text-align: center;background:none}
+  .aui-row .menus{margin-bottom: 25px;text-align: center;background: #ff7e00;color:#fff;border-radius: 50%;margin-right: 18px;float:left;padding:12px}
+  .aui-row .menus:active{color:#666;background: #fff}
+  .arrow_left{background: none;color:#fff}
+  #news_body{display: none}
+  #news_main{display: none}
+	</style>
+</head>
+<body>
+
+  <div id="wrap">
+
+    <header class="aui-bar aui-bar-nav" id="header">
+      <a class="aui-pull-left aui-btn" id="win_close" tapmode onclick="win_close();">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title"></div>
+    </header>
+  </div>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+
+
+
+        api.openFrame({
+            name: 'flzx_news_frm',
+            url: './flzx_news_frm.html',
+            bgColor:'',
+            rect: {
+                x: 0,
+                y: 58,
+                w: 'auto',
+                h: 'auto',
+            },
+            bounces: false,
+            bgColor: 'fs://',
+            pageParam: {
+                name: 'flzx_news_frm',
+                entry_name: api.pageParam.entry_name,
+                entry_id: api.pageParam.entry_id,
+            }
+        });
+
+          var entry_name = api.pageParam.entry_name;
+          $('#header .aui-title').text(entry_name);
+
+    };
+
+    function win_close(){
+      var close_id = api.pageParam.close_id;
+
+
+      if(close_id){
+        api.closeWin({
+            name: 'flzx_news_win'+close_id,
+        });
+      }else{
+        api.closeWin({
+            name: 'flzx_news_win',
+        });
+      }
+
+    }
+</script>
+</html>

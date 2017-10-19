@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body{}
+  #wrap{position: fixed;top:0;right: 0;height: 100%;width:100%;background: url('../image/bg.png') no-repeat;background-size: cover;}
+  #header{background: rgba(19,91,172,0.8);opacity: 1;text-align: center;color: #fff;margin-top: -25px;height: 70px}
+  #header h1{font-size: 14px;padding: 0;margin: 0;display: block;}
+  #main{background: none;padding-top: 0px;height: 100%}
+  .aui-grid{width: 90%;margin: 20px auto;text-align: center;background:none}
+  .aui-row .menus{font-size:20px;
+    margin-bottom: 25px;text-align: center;background: #ff7e00;color:#fff;border-radius: 50%;margin-right: 6px;margin-left:6px;float:left;padding:20px;width:100px;height: 100px}
+  .aui-row .menus  .aui-grid-label{font-size: 22px;line-height: 26px}
+
+  .aui-row .menus:active{color:#666;background: #fff}
+  .arrow_left{background: none;color:#fff}
+
+	</style>
+</head>
+<body>
+
+  <div id="wrap">
+
+
+    <header class="aui-bar aui-bar-nav" id="header">
+      <a class="aui-pull-left aui-btn" id="win_close" tapmode onclick="win_close();">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">法律援助</div>
+    </header>
+
+
+      <div id="main" class="flex-con" >
+          <section class="aui-grid" >
+            <div class="aui-row" id="menu_list">
+            </div>
+        </section>
+      </div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //获取按钮高度
+        //alert($api.offset($api.dom('.aui-col-xs-6')).h);
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+
+
+
+        get_flyz();
+
+    };
+
+    function get_flyz(){
+      var app_url = $api.getStorage('APP_URL');
+      var Machinecode = $api.getStorage('Machinecode');
+      var token = $api.getStorage('token');
+      console.log(token);
+      api.ajax({
+        url: app_url+'/robot/news/news_list.html?type=17',
+        method: 'get',
+        headers: {token:token},
+    }, function(ret, err) {
+        if (ret) {
+
+        if(ret.code == '10005'){    //判断token过期
+          api.openFrame({
+              name: 'login',
+              url: './login.html',
+              rect: {
+                  x: 0,
+                  y: 0,
+                  w: '1',
+                  h: '1'
+              },
+              pageParam: {
+                  name: 'login'
+              }
+          });
+
+          win_close();
+
+        }
+
+            var html='';
+            console.log(JSON.stringify(ret));
+            for (var i = 0; i < ret.data.data_list.length; i++) {
+              var title = ret.data.data_list[i].title;
+              var url = ret.data.data_list[i].url;
+              html +='<div class="menus" title='+title+' url='+url+' tapmode onclick="flzx_news(this);"><div class="aui-grid-label" >'+ret.data.data_list[i].title+'</div></div>';
+            }
+            //打开详情页面
+            $api.html($api.byId('menu_list'),html);
+
+            //console.log(JSON.stringify(ret));
+        } else {
+            api.alert({ msg: JSON.stringify(err) });
+        }
+    });
+    }
+
+
+    function flzx_news(obj){
+
+      var title = $api.attr(obj,'title');
+      var url = $api.attr(obj,'url');
+
+      api.openWin({
+          name: 'flyz_news',
+          url: './flyz_news.html',
+          pageParam: {
+              title: title,
+              url:url,
+          }
+      });
+    }
+
+    function win_close(){
+
+      api.closeWin();
+    }
+
+
+
+
+
+</script>
+</html>

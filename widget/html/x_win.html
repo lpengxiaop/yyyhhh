@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>x</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body{}
+  #wrap{position: fixed;top:0;right: 0;height: 100%;width:100%;background: url('../image/bg.png') no-repeat;background-size: cover;}
+  #header{height: 70px;background: rgba(19,91,172,0.8);opacity: 1;padding-top: 0px;text-align: center;color: #fff;margin-top: -25px}
+  #header h1{font-size: 26px}
+  #main{background: none;padding-top: 10px;height: 100%}
+  .aui-grid{width: 100%;margin: 0 auto;text-align: center;background:none}
+  .aui-row .menus{margin-bottom: 25px;text-align: center;background: -webkit-linear-gradient(top,#d47518,#ff7e00);color:#fff;border-radius:15px;margin-right: 10px;margin-left:10px;
+    float:left;padding:5px 20px 10px 20px;box-shadow: 1px 3px 2px #000;}
+  .aui-row .menus:active{color:#666;background: #fff}
+  .arrow_left{background: none;color:#fff}
+  .aui-title{font-size: 30px}
+  .kf{width: 80px;text-align: center;margin: 15px auto}
+  .kf img{width: 100%;}
+
+	</style>
+</head>
+<body>
+
+  <div id="wrap">
+
+
+    <header class="aui-bar aui-bar-nav" id="header">
+      <a class="aui-pull-left aui-btn" id="win_close" tapmode onclick="win_close();">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">x</div>
+    </header>
+
+
+      <div id="main" class="flex-con" >
+
+
+        <div class="kf" tapmode onclick="open_yuyin();"><img src="../image/icon_kf.png"></div>
+
+        <div>
+          <section class="aui-grid" >
+            <div class="aui-row" id="menu_list">
+
+            </div>
+        </section>
+      </div>
+  </div>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //获取按钮高度
+        //alert($api.offset($api.dom('.aui-col-xs-6')).h);
+        $api.fixStatusBar(header);
+
+
+
+        get_flyz();
+
+    };
+    function get_flyz(){
+      var app_url = $api.getStorage('APP_URL');
+      var Machinecode = $api.getStorage('Machinecode');
+      var token = $api.getStorage('token');
+      var data_json = [
+        {
+          "id": 1,
+          "title": "普法依法治理",
+        },
+        {
+          "id": 2,
+          "title": "律师",
+        },
+        {
+          "id": 3,
+          "title": "公正",
+        },
+        {
+          "id": 4,
+          "title": "司法鉴定",
+        },
+        {
+          "id": 5,
+          "title": "司法考试",
+        },
+        {
+          "id": 6,
+          "title": "安置帮教",
+        },
+        {
+          "id": 7,
+          "title": "社区矫正",
+        },
+        {
+          "id": 8,
+          "title": "仲裁",
+        },
+        {
+          "id": 9,
+          "title": "戒毒",
+        },
+        {
+          "id": 10,
+          "title": "监狱管理",
+        },
+        {
+          "id": 11,
+          "title": "政府12345",
+        },
+        {
+          "id": 12,
+          "title": "公安110",
+        }];
+
+      var html='';
+      for (var i = 0; i < data_json.length; i++) {
+            var title = data_json[i].title;
+            var id = data_json[i].id;
+            var title = $api.setStorage('x_title',title);
+            
+            html +='<div class="menus" title='+data_json[i].title+' id='+data_json[i].id+' tapmode onclick="open_json(this);"><div class="aui-grid-label" >'+data_json[i].title+'</div></div>';
+          //打开详情页面
+
+
+      }
+        $api.html($api.byId('menu_list'),html);
+}
+
+    function open_json(obj){
+
+      var title = $api.attr(obj,'title');
+      var id = $api.attr(obj,'id');
+
+      var menus_h = $api.offset($api.dom('.menus')).h;
+      alert(title);
+
+      api.openWin({
+          name: 'x_frm',
+          url: './x_frm.html',
+          bounces: true,
+        bgColor: '#666',
+          rect: {
+              x: 0,
+              y: menus_h,
+              w: 'auto',
+              h: 'auto'
+          },
+          pageParam: {
+              name: 'x_frm',
+              x_id: id,
+              x_title:title
+          }
+      })
+    }
+
+    function open_yuyin(){
+
+      api.openWin({
+          name: 'yuyin_win',
+          url: './yuyin_win.html',
+
+          bgColor: '#666',
+          pageParam: {
+              name: 'yuyin_win',
+          }
+      })
+
+    }
+
+    function win_close(){
+      api.closeWin();
+    }
+</script>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>语音识别</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+      body,html{background: #eee}
+      header{position: fixed!important;top:0;left:0;width: 100%;}
+      section{margin-top: 80px}
+    </style>
+  </head>
+  <body>
+
+    <header class="aui-bar aui-bar-nav" id="header">
+      <a class="aui-pull-left aui-btn" id="win_close" tapmode onclick="win_close();">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div class="aui-title">智能问答</div>
+    </header>
+
+
+    <div>
+      <section class="aui-chat">
+
+          <div class="aui-chat-item aui-chat-left">
+              <div class="aui-chat-media">
+                  <img src="../image/jqr.png" />
+              </div>
+              <div class="aui-chat-inner">
+
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      Hello AUI 2.0!
+                  </div>
+
+              </div>
+          </div>
+          <div class="aui-chat-item aui-chat-right">
+              <div class="aui-chat-media">
+                  <img src="../image/user.png" />
+              </div>
+              <div class="aui-chat-inner">
+
+                  <div class="aui-chat-content">
+                      <div class="aui-chat-arrow"></div>
+                      你好！阿斯蒂芬阿斯蒂芬阿斯蒂芬
+                  </div>
+
+              </div>
+          </div>
+
+
+      </section>
+
+    </div>
+
+
+  </body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/zepto.min.js"></script>
+  <script>
+    function win_close(){
+      api.closeWin();
+    }
+  </script>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body,html{background: none}
+  #wrap{background: none}
+  .aui-grid{width: 90%;margin: 20px auto;text-align: center;background:none}
+  .aui-row .menus{padding:10px;margin-bottom: 25px;text-align: center;background: #ff7e00;color:#fff;border-radius: 50%;margin-right: 15px;float:left;width: 100px;height: 100px;}
+  .aui-row .menus:active{color:#666;background: #fff}
+  .arrow_left{background: none;color:#fff}
+  .font_4{font-size: 20px!important;line-height: 25px!important;padding:5px!important;;}
+  .font_3{font-size: 20px!important;line-height: 25px!important;padding:0px 5px!important;}
+  .font_all{line-height: 20px!important;padding-top: 6px!important}
+	</style>
+</head>
+<body>
+
+  <div id="wrap">
+      <div id="main" class="flex-con" >
+          <section class="aui-grid" >
+            <div class="aui-row" id="menu_list">
+
+            </div>
+        </section>
+      </div>
+  </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //获取按钮高度
+        //alert($api.offset($api.dom('.aui-col-xs-6')).h);
+
+
+        get_flzx();
+    };
+
+    function get_flzx(){
+
+      var app_url = $api.getStorage('APP_URL');
+      var Machinecode = $api.getStorage('Machinecode');
+      var token = $api.getStorage('token');
+
+      api.ajax({
+        url: app_url+'/robot/entry/index.html?entry_type=med',
+        method: 'get',
+        headers: {token:token},
+    }, function(ret, err) {
+        if (ret) {
+            var html='';
+            if(ret.data){
+              for (var i = 0; i < ret.data.length; i++) {
+                var entry_id = ret.data[i].entry_id;
+                var entry_name = ret.data[i].entry_name;
+
+                if(entry_name.length == 6){
+                  html += '<div class="menus" entry_id='+ret.data[i].entry_id+' entry_name='+entry_name+' tapmode onclick="flzx_news(this);"><div class="aui-grid-label font_4" >'+entry_name+'</div></div>';
+                }else if(entry_name.length == 8){
+                  html += '<div class="menus" entry_id='+ret.data[i].entry_id+' entry_name='+entry_name+' tapmode onclick="flzx_news(this);"><div class="aui-grid-label font_3" >'+entry_name+'</div></div>';
+                }else{
+                  html += '<div class="menus" entry_id='+ret.data[i].entry_id+' entry_name='+entry_name+' tapmode onclick="flzx_news(this);"><div class="aui-grid-label font_all" >'+entry_name+'</div></div>';
+                }
+
+              }
+
+              //打开详情页面
+              $api.html($api.byId('menu_list'),html);
+            }else{
+
+              api.openFrame({
+                  name: 'login',
+                  url: './login.html',
+                  rect: {
+                      x: 0,
+                      y: 0,
+                      w: '1',
+                      h: '1'
+                  },
+                  pageParam: {
+                      name: 'login'
+                  }
+              });
+              location.reload();
+            }
+        } else {
+
+            api.alert({ msg: JSON.stringify(err) });
+        }
+    });
+    }
+
+
+    function flzx_news(obj){
+
+
+
+      var entry_id = $api.attr(obj,'entry_id');
+      var entry_name = $api.attr(obj,'entry_name');
+
+
+
+      api.openWin({
+          name: 'flzx_news_win',
+          url: './flzx_news_win.html',
+          pageParam: {
+              entry_name: $api.attr(obj,'entry_name'),
+              entry_id: $api.attr(obj,'entry_id'),
+          }
+
+      });
+    }
+
+    function win_close(){
+      api.closeWin({
+          name: 'flzx',
+      });
+    }
+
+
+
+
+
+</script>
+</html>

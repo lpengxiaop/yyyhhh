@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body{}
+  #wrap{position: fixed;top:0;right: 0;height: 100%;width:100%;background: url('../image/bg.png') no-repeat;background-size: cover;}
+  #header{height: 70px;background: rgba(19,91,172,0.8);opacity: 1;padding-top: 0px;text-align: center;color: #fff;margin-top: -25px}
+  #header h1{font-size: 26px;padding:0;margin: 0}
+  #main{background: none;padding-top: 20px;height: 100%}
+  .aui-grid{width: 90%;margin: 0 auto;text-align: center;padding-top:10%}
+  .aui-row .aui-col-xs-66{margin-bottom: 25px;text-align: center;}
+  .aui-row .aui-col-xs-66 .aui-grid-label{font-size: 20px}
+  .aui-row .bfb50{width: 25%;float: left}
+  .aui-row .bfb50:nth-child(1) .aui-col-xs-66{background: #629536;border-radius: 50%;}
+  .aui-row .bfb50:nth-child(1) .aui-col-xs-66:active{opacity: 0.6}
+  .aui-row .bfb50:nth-child(2) .aui-col-xs-66{background: #0c917e;border-radius: 50%;}
+  .aui-row .bfb50:nth-child(2) .aui-col-xs-66:active{opacity: 0.6}
+  .aui-row .bfb50:nth-child(3) .aui-col-xs-66{background: #b17b33;border-radius: 50%;}
+  .aui-row .bfb50:nth-child(3) .aui-col-xs-66:active{opacity: 0.6}
+  .aui-row .bfb50:nth-child(4) .aui-col-xs-66{background: #b79f45;border-radius: 50%;}
+  .aui-row .bfb50:nth-child(4) .aui-col-xs-66:active{opacity: 0.6}
+
+
+	</style>
+</head>
+<body>
+
+  <div id="wrap">
+    <header class="aui-bar aui-bar-nav" id="header">
+      <a class="aui-pull-left aui-btn" id="win_close" tapmode onclick="win_close();">
+
+      </a>
+      <div class="aui-title">3+X</div>
+    </header>
+      <div id="main" class="flex-con">
+
+          <section class="aui-grid" style='color:#fff;background:none'>
+            <div class="aui-row">
+              <div class="bfb50">
+                <div class="aui-col-xs-66" tapmode onclick="flyz();">
+                    <i class="aui-iconfont aui-icon-like"></i>
+                    <div class="aui-grid-label">法律援助</div>
+                </div></div>
+                <div class="bfb50">
+                <div class="aui-col-xs-66" tapmode onclick="rmtj();">
+                    <i class="aui-iconfont aui-icon-my"></i>
+                    <div class="aui-grid-label">人民调解</div>
+                </div></div>
+                <div class="bfb50">
+                <div class="aui-col-xs-66" tapmode onclick="flzx();">
+                    <i class="aui-iconfont aui-icon-comment"></i>
+                    <div class="aui-grid-label">法律咨询</div>
+                </div></div>
+                <div class="bfb50">
+                <div class="aui-col-xs-66" tapmode onclick="x();">
+                    <i class="aui-iconfont aui-icon-calendar"></i>
+                    <div class="aui-grid-label">X</div>
+                </div></div>
+
+
+            </div>
+        </section>
+
+      </div>
+  </div>
+
+    <label id="con">Hello APP</label>
+	<div id='sys-info'></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //获取按钮高度
+        //alert($api.offset($api.dom('.aui-col-xs-6')).h);
+        var menus_h = $api.offset($api.dom('.aui-col-xs-66')).h;
+        $('.aui-col-xs-66').css({
+          'width':menus_h,
+        })
+        $api.fixStatusBar(header);
+    };
+
+    function flyz(){
+      api.openWin({
+          name: 'flzx',
+          url: './flyz.html',
+          pageParam: {
+              name: 'flyz'
+          }
+      });
+    }
+
+    function flzx(){
+      api.openWin({
+          name: 'flzx_win',
+          url: './flzx_win.html',
+          pageParam: {
+              name: 'flzx_win'
+          }
+      });
+    }
+
+    function rmtj(){
+      api.openWin({
+          name: 'rmtj_win',
+          url: './rmtj_win.html',
+          pageParam: {
+              name: 'rmtj_win'
+          }
+      });
+    }
+
+    function x(){
+      api.openWin({
+          name: 'x_win',
+          url: './x_win.html',
+          pageParam: {
+              name: 'x_win'
+          }
+      });
+    }
+</script>
+</html>

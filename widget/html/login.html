@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>登陆中</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  </style>
+</head>
+<body>
+
+</body>
+  <script type="text/javascript" src="../script/api.js"></script>
+  <script type="text/javascript" src="../script/zepto.min.js"></script>
+  <script type="text/javascript" src="../script/md5.min.js"></script>
+  <script type="text/javascript">
+      apiready = function(){
+
+        //MD5加密获取mac
+        var id = api.deviceId;
+        var md5_str = 'zhenye';
+        var machinecode = md5(id+md5_str);
+
+        //重新获取token方法
+        var app_url = $api.getStorage('APP_URL');
+        var Machinecode = machinecode;
+        var name = $api.getStorage('name');
+        var password = $api.getStorage('password');
+
+
+
+        api.ajax({
+          url: app_url+'/robot/login/login.html',
+          method: 'post',
+          headers:{
+            "Content-Type":'application/json'
+          },
+          data:{
+              body: {
+                "name": name,
+                "password": password,
+                "machinecode": Machinecode,
+              }
+          }
+
+          }, function(ret, err) {
+              if (ret) {
+
+                  console.log(JSON.stringify(ret));
+                  if(ret.data.token){
+                    $api.setStorage('token',ret.data.token);   //存储token
+                    $api.setStorage('nickname',ret.data.nickname);
+                    api.closeFrame({
+                        name: 'login'
+                    });
+
+
+
+
+                  }else{
+                    api.alert({ msg: JSON.stringify(ret) });
+                  }
+              } else {
+                  api.alert({ msg: JSON.stringify(err) });
+              }
+          });
+
+
+
+
+
+      };
+  </script>
+  </html>

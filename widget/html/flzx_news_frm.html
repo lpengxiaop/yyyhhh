@@ -1,0 +1,176 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+	<style>
+  body{}
+
+
+  #header h1{font-size: 26px}
+  #main{background: none;padding-top: 20px;height: 100%}
+  .aui-grid{width: 90%;margin: 0 auto;text-align: center;background:none}
+  .aui-row .menus{margin-bottom: 25px;text-align: center;background: #ff7e00;color:#fff;border-radius: 50%;margin-right: 18px;float:left;padding:12px}
+  .aui-row .menus:active{color:#666;background: #fff}
+  .arrow_left{background: none;color:#fff}
+  .aui-list-item{border-bottom: 2px solid #111;font-size: 18px;height: 25px;padding-top: 15px;padding-bottom: 15px}
+  .aui-list-item:nth-child(odd){background:#f5f5f5;}
+
+
+
+  #news_body{display: none}
+  #news_main{display: none}
+	</style>
+</head>
+<body>
+
+
+
+<div id="wrap">
+
+        <ul class="aui-list aui-list-in" id="news_main" style="display:none;">
+
+
+        </ul>
+
+
+        <section class="aui-content" id="news_body">
+          <div class="aui-card-list">
+              <div class="aui-card-list-content-padded">
+
+              </div>
+          </div>
+      </section>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/zepto.min.js"></script>
+<script type="text/javascript">
+    apiready = function(){
+        //获取按钮高度
+        //alert($api.offset($api.dom('.aui-col-xs-6')).h);
+
+
+        get_flyz_news();
+
+    };
+
+
+    function get_flyz_news(){
+      var entry_id = api.pageParam.entry_id;
+      var entry_name = api.pageParam.entry_name;
+      var app_url = $api.getStorage('APP_URL');
+      var token = $api.getStorage('token');
+      $('#header .aui-title').text(entry_name);
+      api.ajax({
+        url: app_url+'/robot/entry/entry_list.html?token='+token+'&uid=1&entry_id='+entry_id+'',
+        method: 'get',
+        headers: {token:token},
+    }, function(ret, err) {
+        if (ret) {
+          if(ret.code == '10005'){    //判断token过期
+            api.openFrame({
+                name: 'login',
+                url: './login.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: '1',
+                    h: '1'
+                },
+                pageParam: {
+                    name: 'login'
+                }
+            });
+            location.reload();
+          }else if(ret.code == '1'){
+              //关闭win的时候写入id
+              $api.setStorage('close_id',api.pageParam.entry_id);
+
+            //判断是否是递归最后一层
+            if(ret.type !== 'entry'){
+                $('#news_main').hide();
+                $('#news_body').show();
+                //开始朗读获取到的标题
+                var speechRecognizer = api.require('speechRecognizer');
+                  speechRecognizer.read({
+                      readStr: ret.resultdata,
+                      speed: 60,
+                      volume: 60,
+                      voice: 'xiaoyan',
+                      rate: 16000,
+                      audioPath: 'fs://speechRecogniser/read.mp3'
+                  }, function(ret, err) {
+                      if (ret.status) {
+                          ret.speakProgress
+                      } else {
+                          api.alert({ msg: err.msg });
+                      }
+                  });
+
+                var html_str = ret.resultdata.replace(/\r\n/g,"<br>");;
+
+                $api.html($api.dom('#news_body .aui-card-list-content-padded'),html_str);
+                //document.write(ret.resultdata);
+            }else{
+
+              //开始朗读获取到的标题
+              var speechRecognizer = api.require('speechRecognizer');
+                speechRecognizer.read({
+                    readStr: entry_name,
+                    speed: 60,
+                    volume: 60,
+                    voice: 'xiaoyan',
+                    rate: 16000,
+                    audioPath: 'fs://speechRecogniser/read.mp3'
+                }, function(ret, err) {
+                    if (ret.status) {
+                        ret.speakProgress
+                    } else {
+                        api.alert({ msg: err.msg });
+                    }
+                });
+              console.log(JSON.stringify(ret));
+              $('#news_main').show();
+              $('#news_body').hide();
+              var html='';
+              for (var i = 0; i < ret.data.length; i++) {
+                  html += '<li class="aui-list-item" entry_id='+ret.data[i].entry_id+' entry_name='+ret.data[i].entry_name+' tapmode onclick="flzx_news(this);"><div class="aui-list-item-inner aui-list-item-arrow">'+ret.data[i].entry_name+'</div></li>';
+              }
+              $api.html($api.byId('news_main'),html);
+
+            }
+
+          }else{
+            api.alert({ msg: JSON.stringify(ret)});
+
+          }
+        }
+    });
+
+    }
+
+    function flzx_news(obj){  //无限递归继续打开
+
+            var entry_id = $api.attr(obj,'entry_id');
+            var entry_name = $api.attr(obj,'entry_name');
+            api.openWin({
+                name: 'flzx_news_win'+entry_id,
+                url: './flzx_news_win.html',
+                pageParam: {
+                    entry_name: $api.attr(obj,'entry_name'),
+                    entry_id: $api.attr(obj,'entry_id'),
+                    close_id: $api.attr(obj,'entry_id'),
+                }
+
+            });
+    }
+
+</script>
+</html>
